@@ -29,5 +29,5 @@ zip -r "../${DEPLOYMENT_ZIP:?}" .
 cd ..
 zip "${DEPLOYMENT_ZIP:?}" "${LAMBDA_FILE:?}"
 
-printf 'Build complete; "%s" created:' "${DEPLOYMENT_ZIP:?}"
+printf 'Build complete; "%s" created:\n' "${DEPLOYMENT_ZIP:?}"
 ls -ltrh "${DEPLOYMENT_ZIP:?}"

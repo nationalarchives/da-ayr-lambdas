@@ -11,6 +11,16 @@ ENV_OPENSEARCH_USER_PASSWORD_PARAM_STORE_KEY = 'OPENSEARCH_USER_PASSWORD_PARAM_S
 
 
 def check_verify_ssl_cert() -> bool:
+    """
+    Determine if SSL certificate checking should be disabled; intended for
+    local testing only when accessing a host via an SSH tunnel (and the host
+    name in the certificate doesn't match localhost).
+
+    Disable checking by setting environment variable DO_NOT_VERIFY_SSL to the
+    string value TRUE.
+
+    :return: True if SSL cert checking enabled (default), False otherwise.
+    """
     try:
         if os.environ[ENV_DO_NOT_VERIFY_SSL] == 'TRUE':
             print(f'check_verify_ssl_cert: do not verify')
@@ -23,6 +33,14 @@ def check_verify_ssl_cert() -> bool:
 
 
 def get_opensearch_user_password() -> str:
+    """
+    Gets OpenSearch password from AWS ParameterStore; or, for local testing
+    only, environment variable OPENSEARCH_USER_PASSWORD. The AWS
+    ParameterStore key name is loaded from environment variable
+    OPENSEARCH_USER_PASSWORD_PARAM_STORE_KEY.
+
+    :return: String containing OpenSearch password.
+    """
     try:
         return os.environ[ENV_OPENSEARCH_USER_PASSWORD]
     except KeyError:
@@ -39,6 +57,12 @@ def get_opensearch_user_password() -> str:
 
 
 def get_opensearch_url() -> str:
+    """
+    Returns base part of OpenSearch host URL from environment variable
+    OPENSEARCH_HOST_URL.
+
+    :return: OpenSearch host base URL.
+    """
     opensearch_host_url = os.environ[ENV_OPENSEARCH_HOST_URL]
     if not opensearch_host_url.endswith('/'):
         print(f'get_opensearch_url: appending /')
@@ -48,6 +72,12 @@ def get_opensearch_url() -> str:
 
 
 def get_opensearch_query(source_organization: str) -> str:
+    """
+    Builds an example OpenSearch query.
+
+    :param source_organization:
+    :return: JSON formatted OpenSearch example query.
+    """
     return json.dumps(
         {
             "query": {
@@ -60,6 +90,13 @@ def get_opensearch_query(source_organization: str) -> str:
 
 
 def lambda_handler(event, context):
+    """
+    Handler to run a query against an OpenSearch host.
+
+    :param event: AWS Lambda event
+    :param context: AWS Lambda context
+    :return: AWS Lambda response
+    """
     print(f'--- event {"-" * 70}\n{event}')
     print(f'--- context {"-" * 68}\n{context}')
     verify_ssl_cert = check_verify_ssl_cert()
