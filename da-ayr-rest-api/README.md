@@ -8,6 +8,16 @@
         * [Access Keycloak Directly](#access-keycloak-directly)
         * [Access Keycloak Via SSH Tunnel](#access-keycloak-via-ssh-tunnel)
 
+* [Deploying](#deploying)
+    * [Create Deployment Package](#create-deployment-package)
+* [Running](#running)
+    * [Access Private API Gateway Via SSH Tunnel](#access-private-api-gateway-via-ssh-tunnel)
+* [Keycloak Operations](#keycloak-operations)
+    * [Keycloak Authentication](#keycloak-authentication)
+        * [Access Keycloak Directly](#access-keycloak-directly)
+        * [Access Keycloak Via SSH Tunnel](#access-keycloak-via-ssh-tunnel)
+    * [Keycloak Token Validation](#keycloak-token-validation)
+
 # Deploying
 
 ## Create Deployment Package
@@ -48,6 +58,8 @@ curl --request POST \
   --resolve "${API_GATEWAY_HOST}:22443:127.0.0.1" \
   "https://${API_GATEWAY_HOST}:22443/test"
 ```
+
+# Keycloak Operations
 
 ## Keycloak Authentication
 
@@ -119,3 +131,39 @@ curl --request POST \
   --data 'grant_type=password' \
   "https://${KEYCLOAK_HOST:?}:22444/realms/${KEYCLOAK_REALM:?}/protocol/openid-connect/token"
 ```
+
+## Keycloak Token Validation
+
+To check value in var `access_token`:
+
+```bash
+KEYCLOAK_HOST=''
+KEYCLOAK_REALM=''
+CLIENT_ID=''
+CLIENT_SECRET=''
+
+curl --request POST \
+  --fail-with-body \
+  --silent \
+  --show-error \
+  --data "client_id=${CLIENT_ID:?}" \
+  --data "client_secret=${CLIENT_SECRET:?}" \
+  --data "token=${access_token:?}" \
+  "https://${KEYCLOAK_HOST:?}/realms/${KEYCLOAK_REALM:?}/protocol/openid-connect/token/introspect" \
+| python3 -m json.tool
+```
+
+> See section [Keycloak Authentication](#keycloak-authentication) above to get
+> an access token
+
+* Validation endpoint can be verified with:
+
+    ```bash
+    KEYCLOAK_HOST=''
+    KEYCLOAK_REALM=''
+    
+    curl \
+        "https://${KEYCLOAK_HOST:?}/realms/${KEYCLOAK_REALM:?}/.well-known/openid-configuration" \
+        | python3 -m json.tool
+    ```
+  
