@@ -107,10 +107,40 @@ def get_opensearch_index(event) -> str:
     except KeyError:
         print(f'get_opensearch_index: env var "{ENV_OPENSEARCH_DEFAULT_INDEX}" not set')
         if JSON_KEY_OPENSEARCH_INDEX in event:
+            # Lambda with payload at top level
             print(f'get_opensearch_index: found key {JSON_KEY_OPENSEARCH_INDEX}')
             return event[JSON_KEY_OPENSEARCH_INDEX]
+        elif JSON_KEY_BODY in event:
+            # Lambda with payload in body key
+            print(f'get_opensearch_index: found key {JSON_KEY_BODY}')
+            body = json.loads(event['body'])
+            if JSON_KEY_OPENSEARCH_INDEX in body:
+                print(f'get_opensearch_index: found key {JSON_KEY_OPENSEARCH_INDEX}')
+                return body[JSON_KEY_OPENSEARCH_INDEX]
         print(f'get_opensearch_index: no index given')
         return ''
+
+
+def get_event_key(event, key: str) -> str:
+    """
+    Returns `key` value from event; either at top-level, or in `body` key;
+    returns empty string if not found.
+    :param event: Lambda event
+    :param key: Name of key whose value is to be returned
+    :return: Key value
+    """
+    if key in event:
+        # Lambda with payload at top level
+        print(f'get_event_key: found key "{key}" at top level')
+        return event[key]
+    elif JSON_KEY_BODY in event:
+        # Lambda with payload in body key
+        print(f'get_event_key: found key {JSON_KEY_BODY}')
+        body = json.loads(event['body'])
+        if key in body:
+            print(f'get_event_key: found key {key} in {JSON_KEY_BODY}')
+            return body[key]
+    return ''
 
 
 def lambda_handler(event, context):
@@ -121,8 +151,8 @@ def lambda_handler(event, context):
     :param context: AWS Lambda context
     :return: AWS Lambda response
     """
-    print(f'--- event {"-" * 70}\n{event}')
-    print(f'--- context {"-" * 68}\n{context}')
+    print(f'--- event start {"-" * 64}\n{event}\n--- event end {"-" * 66}')
+    print(f'--- context start {"-" * 62}\n{context}\n--- context end {"-" * 64}')
     verify_ssl_cert = check_verify_ssl_cert()
     opensearch_host_url = get_opensearch_url()
     opensearch_user = os.environ[ENV_OPENSEARCH_USER]
@@ -134,9 +164,7 @@ def lambda_handler(event, context):
         opensearch_index += '/'
     url = opensearch_host_url + f'{opensearch_index}_search?pretty=true'
     print(f'url={url}')
-    source_organization = ''
-    if JSON_KEY_SOURCE_ORG in event:
-        source_organization = event[JSON_KEY_SOURCE_ORG]
+    source_organization = get_event_key(event=event, key=JSON_KEY_SOURCE_ORG)
     print(f'source_organization={source_organization}')
     opensearch_query_json = get_opensearch_query(source_organization)
 

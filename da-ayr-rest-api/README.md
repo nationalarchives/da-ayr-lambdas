@@ -1,22 +1,17 @@
 # da-ayr-rest-api
 
+* [da-ayr-rest-api](#da-ayr-rest-api)
 * [Deploying](#deploying)
     * [Create Deployment Package](#create-deployment-package)
 * [Running](#running)
     * [Access Private API Gateway Via SSH Tunnel](#access-private-api-gateway-via-ssh-tunnel)
-    * [Keycloak Authentication](#keycloak-authentication)
-        * [Access Keycloak Directly](#access-keycloak-directly)
-        * [Access Keycloak Via SSH Tunnel](#access-keycloak-via-ssh-tunnel)
-
-* [Deploying](#deploying)
-    * [Create Deployment Package](#create-deployment-package)
-* [Running](#running)
-    * [Access Private API Gateway Via SSH Tunnel](#access-private-api-gateway-via-ssh-tunnel)
+    * [With Authorizer Lambda Function Configured](#with-authorizer-lambda-function-configured)
 * [Keycloak Operations](#keycloak-operations)
     * [Keycloak Authentication](#keycloak-authentication)
         * [Access Keycloak Directly](#access-keycloak-directly)
         * [Access Keycloak Via SSH Tunnel](#access-keycloak-via-ssh-tunnel)
     * [Keycloak Token Validation](#keycloak-token-validation)
+
 
 # Deploying
 
@@ -56,6 +51,25 @@ API_GATEWAY_HOST='?.execute-api.?.amazonaws.com'
 # --resolve to make hostname resolve to local IP address (127.0.0.1):
 curl --request POST \
   --resolve "${API_GATEWAY_HOST}:22443:127.0.0.1" \
+  "https://${API_GATEWAY_HOST}:22443/test"
+```
+
+## With Authorizer Lambda Function Configured
+
+```bash
+LAMBDA_AUTH_FN_HEADER=''
+
+DATA='{
+  "opensearch_index": "",
+  "Source-Organization": ""
+}'
+
+curl --request POST \
+  --write-out "\n%{http_code}\n" \
+  --header "${LAMBDA_AUTH_FN_HEADER}: ${access_token:?}" \
+  --header 'Content-Type: application/json' \
+  --data "${DATA}" \
+  --resolve "${API_GATEWAY_HOST}:22443:127.0.0.1 \
   "https://${API_GATEWAY_HOST}:22443/test"
 ```
 
