@@ -1,6 +1,7 @@
 import boto3
 import os
 import requests
+import json
 
 ENV_PARAM_STORE_KEY_KEYCLOAK_CLIENT_SECRET = 'PARAM_STORE_KEY_KEYCLOAK_CLIENT_SECRET'
 ENV_KEYCLOAK_HOST = 'KEYCLOAK_HOST'
@@ -95,6 +96,9 @@ def lambda_handler(event, context):
 
     auth_response = {
         'principalId': None,
+        'context': {
+            'keycloak_response': json.dumps(keycloak_response)
+        },
         'policyDocument': {
             'Version': '2012-10-17',
             'Statement': [

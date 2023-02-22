@@ -12,7 +12,10 @@ ENV_OPENSEARCH_USER_PASSWORD_PARAM_STORE_KEY = 'OPENSEARCH_USER_PASSWORD_PARAM_S
 ENV_OPENSEARCH_DEFAULT_INDEX = 'OPENSEARCH_DEFAULT_INDEX'
 JSON_KEY_BODY = 'body'
 JSON_KEY_OPENSEARCH_INDEX = 'opensearch_index'
-JSON_KEY_SOURCE_ORG = 'Source-Organization'
+JSON_KEY_SOURCE_ORG = 'source_organization'
+EVENT_KEY_REQUEST_CONTEXT = 'requestContext'
+EVENT_KEY_AUTHORIZER = 'authorizer'
+EVENT_KEY_KEYCLOAK_RESPONSE = 'keycloak_response'
 
 
 def check_verify_ssl_cert() -> bool:
@@ -76,24 +79,6 @@ def get_opensearch_url() -> str:
     return opensearch_host_url
 
 
-def get_opensearch_query(source_organization: str) -> str:
-    """
-    Builds an example OpenSearch query.
-
-    :param source_organization:
-    :return: JSON formatted OpenSearch example query.
-    """
-    return json.dumps(
-        {
-            "query": {
-                "match_phrase": {
-                    "Source-Organization": source_organization
-                }
-            }
-        }
-    )
-
-
 def get_opensearch_index(event) -> str:
     """
     Return the OpenSearch index to use; uses value in environment variable
@@ -129,6 +114,7 @@ def get_event_key(event, key: str) -> str:
     :param key: Name of key whose value is to be returned
     :return: Key value
     """
+    print(f'get_event_key: key={key}')
     if key in event:
         # Lambda with payload at top level
         print(f'get_event_key: found key "{key}" at top level')
@@ -137,10 +123,73 @@ def get_event_key(event, key: str) -> str:
         # Lambda with payload in body key
         print(f'get_event_key: found key {JSON_KEY_BODY}')
         body = json.loads(event['body'])
+        print(f'get_event_key: body:\n{body}')
         if key in body:
             print(f'get_event_key: found key {key} in {JSON_KEY_BODY}')
             return body[key]
     return ''
+
+
+def get_keycloak_context_realm_roles(event) -> list:
+    """
+    Extract Keycloak context injected by Lambda Authorizer function.
+
+    :param event: Lambda's input event
+    :return: Keycloak context dict
+    """
+    if EVENT_KEY_REQUEST_CONTEXT not in event:
+        raise f'No Keycloak context; key={EVENT_KEY_REQUEST_CONTEXT}'
+    request_context = event[EVENT_KEY_REQUEST_CONTEXT]
+    if EVENT_KEY_AUTHORIZER not in request_context:
+        raise f'No Keycloak context; key={EVENT_KEY_AUTHORIZER}'
+    authorizer = request_context[EVENT_KEY_AUTHORIZER]
+    if EVENT_KEY_KEYCLOAK_RESPONSE not in authorizer:
+        raise f'No Keycloak context; key={EVENT_KEY_KEYCLOAK_RESPONSE}'
+    keycloak_response = authorizer[EVENT_KEY_KEYCLOAK_RESPONSE]
+    print(f'keycloak_response:\n{keycloak_response}')
+    return json.loads(keycloak_response)['realm_access']['roles']
+
+
+def get_opensearch_query(
+        role_list: list,
+        source_organization: str
+) -> str:
+    """
+    Builds an example OpenSearch query.
+
+    :param role_list: List of user's permitted roles
+    :param source_organization: Search for source organization value
+    :return: JSON formatted OpenSearch example query.
+    """
+    query = {
+        "query": {
+            "bool": {
+                "must": [],
+                "should": [],
+                "minimum_should_match": 1
+            }
+        }
+    }
+
+    query['query']['bool']['must'].append(
+        {
+            "match_phrase": {
+                "bag_info.source_organization": source_organization
+            }
+        }
+    )
+
+    for role in role_list:
+        query['query']['bool']['should'].append(
+            {
+                "match_phrase": {
+                    "ayr_role": role
+                }
+            }
+        )
+
+    print(f'get_opensearch_query: query:\n{query}')
+    return json.dumps(query)
 
 
 def lambda_handler(event, context):
@@ -166,7 +215,13 @@ def lambda_handler(event, context):
     print(f'url={url}')
     source_organization = get_event_key(event=event, key=JSON_KEY_SOURCE_ORG)
     print(f'source_organization={source_organization}')
-    opensearch_query_json = get_opensearch_query(source_organization)
+    roles = get_keycloak_context_realm_roles(event)
+    print(f'roles:\n{roles}')
+    opensearch_query_json = get_opensearch_query(
+        role_list=roles,
+        source_organization=source_organization
+    )
+    print(f'opensearch_query_json={opensearch_query_json}')
 
     headers = {
         'Content-Type': 'application/json'

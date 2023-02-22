@@ -61,7 +61,7 @@ LAMBDA_AUTH_FN_HEADER=''
 
 DATA='{
   "opensearch_index": "",
-  "Source-Organization": ""
+  "source_organization": ""
 }'
 
 curl --request POST \
