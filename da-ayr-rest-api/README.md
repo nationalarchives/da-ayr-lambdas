@@ -17,15 +17,8 @@
 
 ## Create Deployment Package
 
-Run the following from the Lambda function directory:
-
-```bash
-# If present, remove old version of package dir
-rm -rf ./package
-
-# Create deployment package zip file
-./build.sh
-```
+1. If present, remove old `package` dir and build `zip` file
+2. Run [`package_lambda.sh`](../package_lambda.sh) from the parent directory
 
 # Running
 
