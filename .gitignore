@@ -3,3 +3,4 @@ venv*/
 .venv*/
 *.zip
 /da-ayr-*/package/
+/tmp/
