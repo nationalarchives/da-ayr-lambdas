@@ -57,9 +57,16 @@
 
     ```bash
     # Running locally
+    export AWS_PROFILE=''
     export AYR_TARGET_S3_BUCKET=''
   
-    ./run_lambda_function.py "${TRE_OUTPUT_EVENT:?}"
+    # Setup virtual environment
+    python3 -m venv venv-test-lambda
+    . ./venv-test-lambda/bin/activate
+    pip install --require-virtualenv --requirement requirements-dev.txt
+
+    # Run Lambda handler function locally
+    PYTHONPATH='.' ./run_lambda_function.py --event "${TEST_EVENT:?}"
     ```
 
     ```bash
