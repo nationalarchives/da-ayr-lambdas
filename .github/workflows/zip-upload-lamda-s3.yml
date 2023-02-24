@@ -20,5 +20,5 @@ jobs:
     steps:
     - name: Check files in directory
       run: |
-        cd da-ayr-rest-api
+        cd /da-ayr-rest-api
         pwd
