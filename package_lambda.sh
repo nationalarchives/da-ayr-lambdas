@@ -15,8 +15,7 @@ fi
 
 LAMBDA_DIR="${1:?}"
 LAMBDA_FILES=("${@:2}")
-# DEPLOYMENT_ZIP='aws_lambda.zip'
-DEPLOYMENT_ZIP=("${@:3}")
+DEPLOYMENT_ZIP='aws_lambda.zip'
 REQUIREMENTS_FILE='requirements-deploy.txt'
 
 cd "${LAMBDA_DIR:?}"
@@ -38,7 +37,7 @@ fi
 if [ -f "${REQUIREMENTS_FILE:?}" ]; then
   # Install Python packages required for deployment into the (new) package dir
   printf 'Running pip install to "%s" dir\n' "${PACKAGE_DIR}"
-  pip3 install --target "${PACKAGE_DIR:?}" --requirement "${REQUIREMENTS_FILE:?}"
+  pip install --target "${PACKAGE_DIR:?}" --requirement "${REQUIREMENTS_FILE:?}"
 
   # Add packages to zip
   cd "${PACKAGE_DIR:?}"

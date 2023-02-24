@@ -14,10 +14,12 @@ jobs:
       uses: actions/checkout@v2
     - name: Zip da-ayr-rest-api lambda function 
       run:  |
-        ./package_lambda.sh da-ayr-rest-api  aws_lambda.py lambda_rest_api.zip
+        ./package_lambda.sh da-ayr-rest-api  aws_lambda.py
+        mv da-ayr-rest-api/aws_lambda.zip da-ayr-rest-api/lambda_rest-api.zip
     - name: Zip da-ayr-rest-api-auth lambda function
       run: |
-        ./package_lambda.sh da-ayr-rest-api-auth lambda_function.py lambda_auth.zip
+        ./package_lambda.sh da-ayr-rest-api-auth lambda_function.py 
+        mv da-ayr-rest-api-auth/aws_lambda.zip da-ayr-rest-api/lambda_auth.zip
     - name: Login in to Non Prod Account
       uses: aws-actions/configure-aws-credentials@v1
       with:
