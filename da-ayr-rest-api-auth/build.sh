@@ -10,7 +10,7 @@ LAMBDA_FILE="${2:-lambda_function.py}"
 printf 'Packaging Lambda "%s" into "%s"\n' "${LAMBDA_FILE:?}" "${DEPLOYMENT_ZIP:?}"
 
 # Install location for Python packages to be bundled with deployment zip
-PACKAGE_DIR=package
+PACKAGE_DIR=my_packages
 
 # Stop if package dir exists; prompt caller to remove it to proceed
 if [ -d "${PACKAGE_DIR:?}" ]; then
