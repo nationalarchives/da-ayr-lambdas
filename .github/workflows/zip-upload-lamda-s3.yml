@@ -14,14 +14,14 @@ jobs:
       uses: actions/checkout@v2
     - name: Zip da-ayr-rest-api lambda function 
       run:  |
-        ./package_lambda.sh da-ayr-rest-api  aws_lambda.py
+        ./package_lambda.sh da-ayr-rest-api  aws_lambda.py lambda_rest_api.zip
         cd da-ayr-rest-api
         ls
     - name: Zip da-ayr-rest-api-auth lambda function
       run: |
-        ./package_lambda.sh da-ayr-rest-api-auth lambda_function.py
+        ./package_lambda.sh da-ayr-rest-api-auth lambda_function.py lambda_auth.zip
         cd da-ayr-rest-api-auth
-        mv aws_lambda.zip aws_lambda_auth.zip
+        ls
     - name: Login in to Non Prod Account
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -37,5 +37,5 @@ jobs:
       env:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
       run: |
-        aws s3 cp da-ayr-rest-api/aws_lambda.zip s3://$AWS_S3_BUCKET/ --recursive
-        aws s3 cp da-ayr-rest-api-auth/aws_lambda_auth.zip s3://$AWS_S3_BUCKET/ --recursive
+        aws s3 cp da-ayr-rest-api/lambda_rest_api.zip s3://$AWS_S3_BUCKET/ --recursive
+        aws s3 cp da-ayr-rest-api-auth/lambda_auth.zip s3://$AWS_S3_BUCKET/ --recursive

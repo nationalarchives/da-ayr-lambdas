@@ -15,7 +15,8 @@ fi
 
 LAMBDA_DIR="${1:?}"
 LAMBDA_FILES=("${@:2}")
-DEPLOYMENT_ZIP='aws_lambda.zip'
+# DEPLOYMENT_ZIP='aws_lambda.zip'
+DEPLOYMENT_ZIP=("${@:3}")
 REQUIREMENTS_FILE='requirements-deploy.txt'
 
 cd "${LAMBDA_DIR:?}"
