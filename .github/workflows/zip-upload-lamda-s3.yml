@@ -19,7 +19,7 @@ jobs:
     - name: Zip da-ayr-rest-api-auth lambda function
       run: |
         ./package_lambda.sh da-ayr-rest-api-auth lambda_function.py 
-        mv da-ayr-rest-api-auth/aws_lambda.zip da-ayr-rest-api/lambda_auth.zip
+        mv da-ayr-rest-api-auth/aws_lambda.zip da-ayr-rest-api-auth/lambda_auth.zip
     - name: Login in to Non Prod Account
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -35,5 +35,5 @@ jobs:
       env:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
       run: |
-        aws s3 cp da-ayr-rest-api/lambda_rest_api.zip s3://$AWS_S3_BUCKET/ --recursive
+        aws s3 cp da-ayr-rest-api/lambda_rest-api.zip s3://$AWS_S3_BUCKET/ --recursive
         aws s3 cp da-ayr-rest-api-auth/lambda_auth.zip s3://$AWS_S3_BUCKET/ --recursive
