@@ -14,10 +14,11 @@ jobs:
       uses: actions/checkout@v2
     - name: Zip da-ayr-rest-api lambda function 
       run:  |
-        pwd
         ./package_lambda.sh da-ayr-rest-api  aws_lambda.py
-    - name: Check files in the da-ayr-rest-api-auth directory 
+  upload-lambda-functions-to-s3:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check files in directory
       run: |
         cd da-ayr-rest-api
-        ls
-
+        pwd
