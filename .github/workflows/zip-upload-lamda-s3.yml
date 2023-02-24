@@ -15,7 +15,7 @@ jobs:
     - name: Zip da-ayr-rest-api lambda function 
       run:  |
         pwd
-        ./package_lambda.sh /da-ayr-rest-api  aws_lambda.py
+        ./package_lambda.sh da-ayr-rest-api  aws_lambda.py
     - name: Check files in the da-ayr-rest-api-auth directory 
       run: |
         cd da-ayr-rest-api
