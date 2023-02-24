@@ -1,0 +1,27 @@
+name: Zip Lambda and upload to S3 bucket
+on: [push]
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+  repository-projects: write
+jobs:
+  zip-lambda-function:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Zip da-ayr-rest-api lambda function 
+      run:  |
+        cd da-ayr-rest-api
+        ./build.sh
+    - name: Zip da-ayr-rest-api-auth function
+      run: |
+        cd da-ayr-rest-api
+        ./build.sh
+    - name: Check files in the da-ayr-rest-api-auth directory 
+      run: |
+        pwd
+        ls
+
