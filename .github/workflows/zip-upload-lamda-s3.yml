@@ -39,5 +39,5 @@ jobs:
       env:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
       run: |
-        aws s3 cp da-ayr-rest-api/lambda_rest_api.zip s3://$AWS_S3_BUCKET/ --recursive
+        aws s3 cp /home/runner/work/da-ayr-lambdas/da-ayr-lambdas/da-ayr-rest-api/lambda_rest_api.zip s3://$AWS_S3_BUCKET/ --recursive
         aws s3 cp da-ayr-rest-api-auth/lambda_auth.zip s3://$AWS_S3_BUCKET/ --recursive
