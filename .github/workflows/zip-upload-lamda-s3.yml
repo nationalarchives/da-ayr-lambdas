@@ -15,13 +15,9 @@ jobs:
     - name: Zip da-ayr-rest-api lambda function 
       run:  |
         ./package_lambda.sh da-ayr-rest-api  aws_lambda.py lambda_rest_api.zip
-        cd da-ayr-rest-api
-        ls
     - name: Zip da-ayr-rest-api-auth lambda function
       run: |
         ./package_lambda.sh da-ayr-rest-api-auth lambda_function.py lambda_auth.zip
-        cd da-ayr-rest-api-auth
-        ls
     - name: Login in to Non Prod Account
       uses: aws-actions/configure-aws-credentials@v1
       with:
