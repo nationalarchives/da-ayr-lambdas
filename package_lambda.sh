@@ -38,7 +38,7 @@ fi
 if [ -f "${REQUIREMENTS_FILE:?}" ]; then
   # Install Python packages required for deployment into the (new) package dir
   printf 'Running pip install to "%s" dir\n' "${PACKAGE_DIR}"
-  pip install --target "${PACKAGE_DIR:?}" --requirement "${REQUIREMENTS_FILE:?}"
+  pip3 install --target "${PACKAGE_DIR:?}" --requirement "${REQUIREMENTS_FILE:?}"
 
   # Add packages to zip
   cd "${PACKAGE_DIR:?}"
