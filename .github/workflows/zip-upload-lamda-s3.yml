@@ -15,10 +15,23 @@ jobs:
     - name: Zip da-ayr-rest-api lambda function 
       run:  |
         ./package_lambda.sh da-ayr-rest-api  aws_lambda.py
-  upload-lambda-functions-to-s3:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Check files in directory
+    - name: Zip da-ayr-rest-api-auth lambda function
       run: |
-        cd /da-ayr-rest-api
-        pwd
+        ./package_lambda.sh da-ayr-rest-api-auth lambda_function.py
+    - name: Login in to Non Prod Account
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.AWS_S3_ROLE }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
+        aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ env.AWS_SESSION_TOKEN }}
+        role-skip-session-tagging: true
+        role-duration-seconds: 1200
+    - name: Upload files to S3 bucket
+      env:
+        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      run: |
+        aws s3 cp da-ayr-rest-api/aws_lambda.zip s3://$AWS_S3_BUCKET/ --recursive
+        aws s3 cp da-ayr-rest-api-auth/lambda_function.zip s3://$AWS_S3_BUCKET/ --recursive
