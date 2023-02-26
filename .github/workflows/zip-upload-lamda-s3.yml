@@ -35,12 +35,17 @@ jobs:
         aws-session-token: ${{ env.AWS_SESSION_TOKEN }}
         role-skip-session-tagging: true
         role-duration-seconds: 1200
-    - name: Upload files to S3 bucket
+    - name: Upload da-ayr-rest api to S3 bucket
       env:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
       run: |
+        pwd
         cd da-ayr-rest-api
         pwd
         ls
-        aws s3 lambda_rest_api.zip s3://$AWS_S3_BUCKET/ 
+        aws s3 cp lambda_rest_api.zip s3://$AWS_S3_BUCKET/ 
     # aws s3 cp da-ayr-rest-api-auth/lambda_auth.zip s3://$AWS_S3_BUCKET/ 
+    - name: Upload da-ayr-rest-api-auth to S3 bucket
+      run: |
+        cd da-ayr-rest-api-auth
+        aws s3 cp ambda_auth.zip s3://$AWS_S3_BUCKET/ 
