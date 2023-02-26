@@ -39,16 +39,9 @@ jobs:
       env:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
-        pwd
-        cd da-ayr-rest-api
-        pwd
-        ls
-        aws s3 cp lambda_rest_api.zip s3://$AWS_BUCKET_NAME/
-    # aws s3 cp da-ayr-rest-api-auth/lambda_auth.zip s3://$AWS_S3_BUCKET/ 
+        aws s3 cp da-ayr-rest-api/lambda_rest_api.zip s3://$AWS_BUCKET_NAME/ 
     - name: Upload da-ayr-rest-api-auth to S3 bucket
       env:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
-        cd da-ayr-rest-api-auth
-        pwd
-        aws s3 cp lambda_auth.zip s3://$AWS_BUCKET_NAME/ 
+        aws s3 cp da-ayr-rest-api-auth/lambda_auth.zip s3://$AWS_BUCKET_NAME/ 
