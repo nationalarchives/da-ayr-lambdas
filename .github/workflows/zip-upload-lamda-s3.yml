@@ -40,5 +40,7 @@ jobs:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
       run: |
         cd da-ayr-rest-api
-        aws s3 cp da-ayr-rest-api/lambda_rest_api.zip s3://$AWS_S3_BUCKET/ 
+        pwd
+        ls
+        aws s3 lambda_rest_api.zip s3://$AWS_S3_BUCKET/ 
     # aws s3 cp da-ayr-rest-api-auth/lambda_auth.zip s3://$AWS_S3_BUCKET/ 
