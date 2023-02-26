@@ -48,4 +48,4 @@ jobs:
     - name: Upload da-ayr-rest-api-auth to S3 bucket
       run: |
         cd da-ayr-rest-api-auth
-        aws s3 cp ambda_auth.zip s3://$AWS_BUCKET_NAME/ 
+        aws s3 cp lambda_auth.zip s3://$AWS_BUCKET_NAME/ 
