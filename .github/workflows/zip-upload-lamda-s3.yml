@@ -47,4 +47,4 @@ jobs:
         aws s3 cp da-ayr-rest-api-auth/lambda_auth.zip s3://$AWS_BUCKET_NAME/ 
     - name: List functions 
       run: |
-        aws lambda list-functions
+        aws lambda list-functions --region eu-west-2
