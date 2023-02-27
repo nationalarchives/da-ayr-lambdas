@@ -35,6 +35,12 @@ jobs:
         aws-session-token: ${{ env.AWS_SESSION_TOKEN }}
         role-skip-session-tagging: true
         role-duration-seconds: 1200
+    - name: Move Lambda zip file to /old folder
+      env:
+        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      run: |
+        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_rest_api.zip s3://$AWS_BUCKET_NAME/old/lambda_rest_api.zip
+        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_auth.zip s3://$AWS_BUCKET_NAME/old/lambda_auth.zip
     - name: Upload da-ayr-rest api to S3 bucket
       env:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
@@ -47,4 +53,12 @@ jobs:
         aws s3 cp da-ayr-rest-api-auth/lambda_auth.zip s3://$AWS_BUCKET_NAME/ 
     - name: List functions 
       run: |
-        aws lambda list-functions --region eu-west-2
+        aws lambda list-functions --region eu-west-2 
+    # - name: Refresh LAMBDA functions
+    #   env:
+    #     AWS_LAMBDA_REST_API: ${{ secrets.AWS_LAMBDA_REST_API }}
+    #     AWS_LAMBDA_AUTH: ${{ secrets.AWS_LAMBDA_AUTH }}
+    #     AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+    #   run: |
+    #     aws lambda update-function-code --function-name $AWS_LAMBDA_REST_API --s3-bucket $AWS_BUCKET_NAME --s3-key $AWS_BUCKET_NAME/lambda_rest_api.zip
+    #     aws lambda update-function-code --function-name $AWS_LAMBDA_A UTH --s3-bucket $AWS_BUCKET_NAME --s3-key $AWS_BUCKET_NAME/lambda_auth.zip
