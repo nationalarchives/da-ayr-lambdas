@@ -40,7 +40,6 @@ jobs:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
         aws s3 cp da-ayr-rest-api/lambda_rest_api.zip s3://$AWS_BUCKET_NAME/
-        aws lambda update-function-code --function-name MyLambdaFunction --s3-bucket my-bucket --s3-key path/to/my/function/code.zip
     - name: Upload da-ayr-rest-api-auth to S3 bucket
       env:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
