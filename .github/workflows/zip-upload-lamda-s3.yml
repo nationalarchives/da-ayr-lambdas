@@ -50,10 +50,20 @@ jobs:
       env:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
-        aws s3 cp da-ayr-rest-api-auth/lambda_auth.zip s3://$AWS_BUCKET_NAME/ 
+        aws s3 cp da-ayr-rest-api-auth/lambda_auth.zip s3://$AWS_BUCKET_NAME/
+    - name: Login to Non prod account
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.AWS_S3_ROLE }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
+        aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ env.AWS_SESSION_TOKEN }}
+        role-skip-session-tagging: true
+        role-duration-seconds: 1200
     - name: List functions 
       run: |
-        aws get-current-role-details
         aws lambda list-functions --region eu-west-2 
     - name: Refresh LAMBDA functions
       env:
