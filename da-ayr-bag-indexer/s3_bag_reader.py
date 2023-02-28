@@ -1,0 +1,1 @@
+../lib/s3_bag_reader.py
