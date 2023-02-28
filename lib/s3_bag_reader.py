@@ -145,7 +145,7 @@ class S3BagReader(BagFileMapper):
         return output
 
     @staticmethod
-    def get_csv_file_as_dict(s3_object) -> list:
+    def get_csv_file_as_list(s3_object) -> list:
         """
         Return dictionary representation of a csv file.
         :param s3_object: S3 API object instance (AWS boto3 s3 API get_object)
@@ -174,21 +174,21 @@ class S3BagReader(BagFileMapper):
 
     def get_file_av_csv_as_dict(self) -> dict:
         s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.file_av_csv)
-        data = S3BagReader.get_csv_file_as_dict(s3_object)
+        data = S3BagReader.get_csv_file_as_list(s3_object)
         return {
             self.BAG_FILE_AV: data
         }
 
     def get_file_ffid_csv_as_dict(self) -> dict:
         s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.file_ffid_csv)
-        data = S3BagReader.get_csv_file_as_dict(s3_object)
+        data = S3BagReader.get_csv_file_as_list(s3_object)
         return {
             self.BAG_FILE_FFID_CSV: data
         }
 
     def get_file_metadata_csv_as_dict(self) -> dict:
         s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.file_metadata_csv)
-        data = S3BagReader.get_csv_file_as_dict(s3_object)
+        data = S3BagReader.get_csv_file_as_list(s3_object)
         return {
             self.BAG_FILE_METADATA: data
         }
