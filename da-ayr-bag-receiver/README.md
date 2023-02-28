@@ -2,71 +2,63 @@
 
 ## Manual Execution
 
-* Copy a bag archive to a s3 location; e.g.:
+### Copy a bag archive to a s3 location
 
-    ```bash
-    # Get an arbitrary example bag
-    curl --location --remote-name \
-        'https://github.com/nationalarchives/da-ayr-design-documentation/blob/main/sample-data/bagit/TDR-2022-D6WD.tar.gz?raw=true'
-    
-    # Upload to s3
-    export AWS_PROFILE=''
-    S3_BUCKET=''
-    BAG_FILE='TDR-2022-D6WD.tar.gz'
-  
-    aws s3 cp "${BAG_FILE:?}" "s3://${S3_BUCKET:?}/tre-data/${BAG_FILE:?}"
-    
-    # List items in path tre-data:
-    aws s3 ls "s3://${S3_BUCKET:?}/tre-data/"
-    ```
+For example:
 
-    ```bash
-    # To remove all items in path tre-data:
-    export AWS_PROFILE=''
-    aws s3 rm --recursive "s3://${S3_BUCKET:?}/tre-data/"
-    ```
+```bash
+# Get an arbitrary example bag
+BAG_FILE='TDR-2022-D6WD.tar.gz'
 
-* Create mock TRE output event with pre-signed URL to fetch TRE bag file:
+BAG_URL='https://github.com/nationalarchives/'\
+'da-ayr-design-documentation/blob/main/'\
+'sample-data/bagit/'"${BAG_FILE:?}"'?raw=true'
 
-    ```bash
-    export AWS_PROFILE=''
-    S3_BUCKET=''
-    BAG_FILE='TDR-2022-D6WD.tar.gz'
-    S3_URL="s3://${S3_BUCKET:?}/tre-data/${BAG_FILE:?}"
-  
-    TRE_OUTPUT_EVENT="$(
-      printf '{
-        "dri-preingest-sip-available": {
-          "bag-url": "%s"
-        }
-      }\n' \
-        "$(aws s3 presign --expires-in 60 "${S3_URL:?}")"
-    )"
-    
-    echo "${TRE_OUTPUT_EVENT:?}"
-    ```
+curl \
+  --location \
+  --output "${BAG_FILE:?}" \
+  "${BAG_URL:?}"
 
-* Trigger the Lambda:
+# Upload to s3
+export AWS_PROFILE=''
+S3_BUCKET=''
 
-    ```bash
-    # Running locally
-    export AYR_TARGET_S3_BUCKET=''
-  
-    ./run_lambda_function.py "${TRE_OUTPUT_EVENT:?}"
-    ```
+aws s3 cp "${BAG_FILE:?}" "s3://${S3_BUCKET:?}/tre-data/${BAG_FILE:?}"
 
-    ```bash
-    # Running on AWS
-    LAMBDA_AWS_NAME=''
-    TRE_OUTPUT_EVENT=''  # see above example
-  
-    aws lambda invoke \
-      --function-name "${LAMBDA_AWS_NAME:?}" \
-      --cli-binary-format raw-in-base64-out \
-      --payload "${TRE_OUTPUT_EVENT:?}" \
-      "${LAMBDA_AWS_NAME:?}.out" \
-      --log-type Tail \
-      --query 'LogResult' \
-      --output text \
-    | base64 --decode
-    ```
+# List items in path tre-data:
+aws s3 ls "s3://${S3_BUCKET:?}/tre-data/"
+aws s3 ls "s3://${S3_BUCKET:?}/tre-data/" --recursive
+```
+
+```bash
+# To remove all items in path tre-data:
+export AWS_PROFILE=''
+aws s3 rm --recursive "s3://${S3_BUCKET:?}/tre-data/"
+```
+
+### Run Test
+
+Set `AWS_PROFILE`:
+
+```bash
+export AWS_PROFILE=''
+```
+
+Set input/output bucket:
+
+```bash
+export AYR_TARGET_S3_BUCKET=''
+```
+
+Set input name:
+
+```bash
+# For example:
+export S3_KEY=tre-data/TDR-2022-D6WD.tar.gz
+```
+
+Run test:
+
+```bash
+python3 -m unittest test_lambda_function.TestLambdaAYRBagReceiver
+```
