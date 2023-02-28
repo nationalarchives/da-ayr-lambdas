@@ -76,8 +76,8 @@ def lambda_handler(event, context):
     :param context: AWS Lambda context
     :return: AWS Lambda response
     """
-    print(f'event={event}')
-    print(f'context={context}')
+    print(f'event:\n{event}')
+    print(f'context:\n{context}')
     validate_event(event)
     print('event validated')
     s3_bucket = event[KEY_S3_BUCKET]
