@@ -1,5 +1,6 @@
 import os
 import boto3
+import s3_bag_reader
 
 
 class AYRBagIndexerError(Exception):
@@ -34,45 +35,25 @@ def validate_event(event):
         raise AYRBagIndexerError(f'Key "{KEY_UNPACKED_FILES} not found"')
 
 
-def s3_object_to_dict(s3_object) -> dict:
-    """
-    Return S3 object as a dictionary.
-    """
-    return_dict = {}
-    lines = s3_object['Body'].read().decode('utf-8').splitlines()
-    for line in lines:
-        key, value = line.strip().split(': ', 1)
-        return_dict[key] = value
-    return return_dict
-
-
-def process_bag_file(
-        s3_bucket: str,
-        s3_key: str,
-        short_s3_name: str
-):
-    """
-    If given S3 bag file is supported, return its dictionary representation
-    and an associated key name (both used to create an associated OpenSearch
-    record).
-
-    :param s3_bucket:
-    :param s3_key:
-    :param short_s3_name:
-    :return:
-    """
-    # Process bag-info.txt
-    if short_s3_name == BAG_FILE_INFO + '.txt':
-        s3_object = s3.get_object(Bucket=s3_bucket, Key=s3_key)
-        bag_info = s3_object_to_dict(s3_object)
-        return BAG_FILE_INFO, bag_info
-
-    return None
-
-
 def lambda_handler(event, context):
     """
-    Scan bag files in S3 and return OpenSearch record.
+    Scan bag files in S3 and return OpenSearch record in the following format:
+
+    {
+        'ayr_role': None,
+        'bag_s3_url': 'ayr-in/TDR-2022-D6WD.tar.gz',
+        'bag_data': {
+            'bag-info.txt': { ... },
+            ...
+            'bag_sub_files' [
+                {
+                    'object': 'ayr-in/TDR-2022-D6WD.tar.gz/TDR-2022-D6WD/data/content/file-c1.txt',
+                    'data': 'dummy data in sample for file-c1.txt'
+                },
+                ...
+            ]
+        }
+    }
 
     Expects the following input event format (e.g. from da-ayr-bag-unpacker):
 
@@ -98,34 +79,39 @@ def lambda_handler(event, context):
     :return: AWS Lambda response
     """
     validate_event(event)
-
+    print('event validated')
     s3_bucket = event[KEY_S3_BUCKET]
     print(f's3_bucket={s3_bucket}')
     bag_name = event[KEY_BAG_NAME]
     print(f'bag_name={bag_name}')
     bag_output_s3_path = event[KEY_BAG_OUTPUT_S3_PATH]
     print(f'bag_output_s3_path={bag_output_s3_path}')
+    unpacked_file_list = event[KEY_UNPACKED_FILES]
     bag_s3_url = f's3://{s3_bucket}/{bag_output_s3_path}'
-    unpacked_files = event[KEY_UNPACKED_FILES]
+    print(f'bag_s3_url={bag_s3_url}')
+    bag_unpack_folder = bag_name.removesuffix('.tar.gz')
+    path_prefix = bag_output_s3_path + '/' + bag_unpack_folder + '/'
+
+    bag = s3_bag_reader.S3BagReader(
+        s3_bucket=s3_bucket,
+        file_list=unpacked_file_list,
+        path_prefix=path_prefix
+    )
+
+    bag_data = {}
+    bag_data.update(bag.get_bag_info_txt_as_dict())
+    bag_data.update(bag.get_bagit_txt_as_dict())
+    bag_data.update(bag.get_file_av_csv_as_dict())
+    bag_data.update(bag.get_file_ffid_csv_as_dict())
+    bag_data.update(bag.get_file_metadata_csv_as_dict())
+    bag_data.update(bag.get_manifest_sha256_as_dict())
+    bag_data.update(bag.get_tagmanifest_sha256_as_dict())
+    bag_data.update(bag.get_sub_files_dict())
 
     opensearch_record = {
         'ayr_role': None,
-        'bag_s3_url': bag_s3_url
+        'bag_s3_url': bag_s3_url,
+        'bag_data': bag_data
     }
-
-    for full_s3_name in unpacked_files:
-        prefix = bag_output_s3_path + '/' + bag_name.split('.')[0] + '/'
-        print(f'remove prefix "{prefix}" from "{full_s3_name}"')
-        short_s3_name = full_s3_name.removeprefix(prefix)
-        print(f'short_s3_name="{short_s3_name}"')
-
-        opensearch_entry = process_bag_file(
-            s3_bucket=s3_bucket,
-            s3_key=full_s3_name,
-            short_s3_name=short_s3_name
-        )
-
-        if opensearch_entry:
-            opensearch_record[opensearch_entry[0]] = opensearch_entry[1]
 
     return opensearch_record
