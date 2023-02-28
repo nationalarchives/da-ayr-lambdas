@@ -159,6 +159,11 @@ class S3BagReader(BagFileMapper):
         lines = s3_object['Body'].read().decode('utf-8').splitlines()
         csv_reader = csv.DictReader(lines)
         for line in csv_reader:
+            # Set empty strings to None (so null later in OpenSearch JSON)
+            for k, v in line.items():
+                if v == '':
+                    line[k] = None
+
             output.append(line)
         return output
 
