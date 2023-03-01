@@ -53,9 +53,10 @@ for lambda_file in "${LAMBDA_FILES[@]}"; do
   zip "${DEPLOYMENT_ZIP:?}" "${lambda_file:?}"
 done
 
-printf 'Deployment package:\n'
-ls -ltrh "${DEPLOYMENT_ZIP:?}"
 printf 'Deployment package content:\n'
 unzip -l "${DEPLOYMENT_ZIP:?}"
+
+printf 'Deployment package:\n'
+ls -ltrh "${DEPLOYMENT_ZIP:?}"
 
 printf 'Build complete; "%s" created in "%s":\n' "${DEPLOYMENT_ZIP:?}" "${PWD:?}"
