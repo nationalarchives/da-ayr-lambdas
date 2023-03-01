@@ -131,21 +131,25 @@ class S3BagReader(BagFileMapper):
         return output
 
     @staticmethod
-    def get_checksum_file_as_dict(s3_object) -> dict:
+    def get_checksum_file_as_list(s3_object) -> list:
         """
-        Return dictionary representation of a checksum file.
+        Return list representation of checksum file entries.
         :param s3_object: S3 API object instance (AWS boto3 s3 API get_object)
-        :return: Dictionary of checksum file key/value pairs (file -> checksum)
+        :return: List of checksum file entries pairs (file -> checksum)
         """
-        output = {}
+        output = []
         lines = s3_object['Body'].read().decode('utf-8').splitlines()
         for line in lines:
             line_items = line.strip().replace('\t', ' ').split(' ', 1)
-            output[line_items[0].strip()] = line_items[1].strip()
+            line_dict = {
+                'object': line_items[1].strip(),
+                'checksum': line_items[0].strip()
+            }
+            output.append(line_dict)
         return output
 
     @staticmethod
-    def get_csv_file_as_dict(s3_object) -> list:
+    def get_csv_file_as_list(s3_object) -> list:
         """
         Return dictionary representation of a csv file.
         :param s3_object: S3 API object instance (AWS boto3 s3 API get_object)
@@ -155,6 +159,11 @@ class S3BagReader(BagFileMapper):
         lines = s3_object['Body'].read().decode('utf-8').splitlines()
         csv_reader = csv.DictReader(lines)
         for line in csv_reader:
+            # Set empty strings to None (so null later in OpenSearch JSON)
+            for k, v in line.items():
+                if v == '':
+                    line[k] = None
+
             output.append(line)
         return output
 
@@ -174,35 +183,35 @@ class S3BagReader(BagFileMapper):
 
     def get_file_av_csv_as_dict(self) -> dict:
         s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.file_av_csv)
-        data = S3BagReader.get_csv_file_as_dict(s3_object)
+        data = S3BagReader.get_csv_file_as_list(s3_object)
         return {
             self.BAG_FILE_AV: data
         }
 
     def get_file_ffid_csv_as_dict(self) -> dict:
         s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.file_ffid_csv)
-        data = S3BagReader.get_csv_file_as_dict(s3_object)
+        data = S3BagReader.get_csv_file_as_list(s3_object)
         return {
             self.BAG_FILE_FFID_CSV: data
         }
 
     def get_file_metadata_csv_as_dict(self) -> dict:
         s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.file_metadata_csv)
-        data = S3BagReader.get_csv_file_as_dict(s3_object)
+        data = S3BagReader.get_csv_file_as_list(s3_object)
         return {
             self.BAG_FILE_METADATA: data
         }
 
     def get_manifest_sha256_as_dict(self) -> dict:
         s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.manifest_sha_256_txt)
-        data = S3BagReader.get_checksum_file_as_dict(s3_object)
+        data = S3BagReader.get_checksum_file_as_list(s3_object)
         return {
             self.BAG_MANIFEST_SHA256: data
         }
 
     def get_tagmanifest_sha256_as_dict(self) -> dict:
         s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.tagmanifest_sha_256_txt)
-        data = S3BagReader.get_checksum_file_as_dict(s3_object)
+        data = S3BagReader.get_checksum_file_as_list(s3_object)
         return {
             self.BAG_TAGMANIFEST_SHA256: data
         }

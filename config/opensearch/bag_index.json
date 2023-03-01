@@ -1,0 +1,161 @@
+{
+  "mappings" : {
+    "properties" : {
+      "ayr_role": {
+        "type" : "keyword"
+      },
+      "bag_s3_url": {
+        "type" : "keyword"
+      },
+      "bag-info.txt": {
+        "properties": {
+          "Consignment-Type": {
+            "type": "keyword"
+          },
+          "Bag-Creator": {
+            "type": "keyword"
+          },
+          "Consignment-Start-Datetime": {
+            "type": "date"
+          },
+          "Consignment-Series": {
+            "type": "keyword"
+          },
+          "Source-Organization": {
+            "type": "keyword"
+          },
+          "Contact-Name": {
+            "type": "keyword"
+          },
+          "Internal-Sender-Identifier": {
+            "type": "keyword"
+          },
+          "Consignment-Completed-Datetime": {
+            "type": "date"
+          },
+          "Consignment-Export-Datetime": {
+            "type": "date"
+          },
+          "Contact-Email": {
+            "type": "keyword"
+          },
+          "Payload-Oxum": {
+            "type": "keyword"
+          },
+          "Bagging-Date": {
+            "type": "date"
+          }
+        }
+      },
+      "bagit.txt": {
+        "properties": {
+          "BagIt-Version": {
+            "type": "keyword"
+          },
+          "Tag-File-Character-Encoding": {
+            "type": "keyword"
+          }
+        }
+      },
+      "file-av.csv": {
+        "type": "nested",
+        "properties": {
+          "Filepath": {
+            "type": "keyword"
+          },
+          "AV-Software": {
+            "type": "keyword"
+          },
+          "AV-SoftwareVersion": {
+            "type": "keyword"
+          }
+        }
+      },
+      "file-ffid.csv": {
+        "type": "nested",
+        "properties": {
+          "Filepath": {
+            "type": "keyword"
+          },
+          "Extension": {
+            "type": "keyword"
+          },
+          "PUID": {
+            "type": "keyword"
+          }
+        }
+      },
+      "file-metadata.csv": {
+        "type": "nested",
+        "properties": {
+          "Filepath": {
+            "type": "keyword"
+          },
+          "FileName": {
+            "type": "keyword"
+          },
+          "FileType": {
+            "type": "keyword"
+          },
+          "Filesize": {
+            "type": "keyword"
+          },
+          "RightsCopyright": {
+            "type": "keyword"
+          },
+          "LegalStatus": {
+            "type": "keyword"
+          },
+          "HeldBy": {
+            "type": "keyword"
+          },
+          "Language": {
+            "type": "keyword"
+          },
+          "FoiExemptionCode": {
+            "type": "keyword"
+          },
+          "LastModified": {
+            "type": "date"
+          },
+          "OriginalFilePath": {
+            "type": "keyword"
+          }
+        }
+      },
+      "manifest-sha256.txt": {
+        "type": "nested",
+        "properties": {
+          "object": {
+            "type": "keyword"
+          },
+          "checksum": {
+            "type": "keyword"
+          }
+        }
+      },
+      "tagmanifest-sha256.txt": {
+        "type": "nested",
+        "properties": {
+          "object": {
+            "type": "keyword"
+          },
+          "checksum": {
+            "type": "keyword"
+          }
+        }
+      },
+      "bag_sub_files": {
+        "type": "nested",
+        "properties": {
+          "object": {
+            "type": "keyword"
+          },
+          "data": {
+            "type": "text"
+          }
+        }
+      }
+    }
+  }
+}

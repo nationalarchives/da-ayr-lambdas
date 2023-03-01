@@ -1,4 +1,3 @@
-import os
 import boto3
 import s3_bag_reader
 
@@ -9,7 +8,6 @@ class AYRBagIndexerError(Exception):
     """
 
 
-OPENSEARCH_INDEX = os.getenv('AYR_OPENSEARCH_INDEX', default='bag')
 KEY_S3_BUCKET = 's3_bucket'
 KEY_BAG_NAME = 'bag_name'
 KEY_BAG_OUTPUT_S3_PATH = 'bag_output_s3_path'
@@ -78,6 +76,8 @@ def lambda_handler(event, context):
     :param context: AWS Lambda context
     :return: AWS Lambda response
     """
+    print(f'event:\n{event}')
+    print(f'context:\n{context}')
     validate_event(event)
     print('event validated')
     s3_bucket = event[KEY_S3_BUCKET]
