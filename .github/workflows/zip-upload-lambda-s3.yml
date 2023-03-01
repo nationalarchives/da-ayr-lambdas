@@ -23,7 +23,7 @@ jobs:
     - name: Zip da-ayr-bag-indexer lambda function
       run: |
         ./package_lambda.sh da-ayr-bag-indexer lambda_function.py
-        mv da-ayr-bag-indexer/lambda_function.zip da-ayr-bag-indexer/lambda_bag_indexer.zip
+        mv da-ayr-bag-indexer/aws_lambda.zip da-ayr-bag-indexer/lambda_bag_indexer.zip
     - name: Login in to Non Prod Account
       uses: aws-actions/configure-aws-credentials@v1
       with:
