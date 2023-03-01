@@ -128,6 +128,7 @@ def lambda_handler(event, context):
     """
     print(f'--- event start {"-" * 64}\n{event}\n--- event end {"-" * 66}')
     print(f'--- context start {"-" * 62}\n{context}\n--- context end {"-" * 64}')
+    validate_event(event)
     verify_ssl_cert = check_verify_ssl_cert()
     print(f'verify_ssl_cert={verify_ssl_cert}')
     opensearch_host_url = get_opensearch_url()
