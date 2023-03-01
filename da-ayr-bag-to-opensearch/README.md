@@ -1,4 +1,4 @@
-# Lambda da-ayr-bag-unpacker
+# Lambda da-ayr-bag-to-opensearch
 
 ## To Build Deployment Zip
 
