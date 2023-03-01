@@ -51,7 +51,8 @@ jobs:
       env:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
-        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_rest_api.zip s3://$AWS_BUCKET_NAME/old/lambda_rest_api.zip
+        timestamp=$(date +"%Y%m%d%H%M")
+        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_rest_api.zip s3://$AWS_BUCKET_NAME/old/lambda_rest_api_$timestamp.zip
         aws s3 mv s3://$AWS_BUCKET_NAME/lambda_auth.zip s3://$AWS_BUCKET_NAME/old/lambda_auth.zip
         aws s3 mv s3://$AWS_BUCKET_NAME/lambda_bag_indexer.zip s3://$AWS_BUCKET_NAME/old/lambda_bag_indexer.zip
         aws s3 mv s3://$AWS_BUCKET_NAME/lambda_bag_receiver.zip s3://$AWS_BUCKET_NAME/old/lambda_bag_receiver.zip
