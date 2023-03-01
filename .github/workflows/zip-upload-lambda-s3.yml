@@ -28,6 +28,10 @@ jobs:
       run: |
         ./package_lambda.sh da-ayr-bag-receiver lambda_function.py
         mv da-ayr-bag-receiver/aws_lambda.zip da-ayr-bag-receiver/lambda_bag_receiver.zip
+    - name: Zip da-ayr-bag-receiver lambda function
+      run: |
+        ./package_lambda.sh da-ayr-bag-unpacker lambda_function.py
+        mv da-ayr-bag-unpacker/aws_lambda.zip da-ayr-bag-unpacker/lambda_bag_unpacker.zip
     - name: Login in to Non Prod Account
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -67,6 +71,11 @@ jobs:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
         aws s3 cp da-ayr-bag-receiver/lambda_bag_receiver.zip s3://$AWS_BUCKET_NAME/
+    - name: Upload da-ayr-bag-receiver to S3 bucket
+      env:
+        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      run: |
+        aws s3 cp da-ayr-bag-unpacker/lambda_bag_unpacker.zip s3://$AWS_BUCKET_NAME/
     # - name: Refresh LAMBDA functions
     #   env:
     #     AWS_LAMBDA_REST_API: ${{ secrets.AWS_LAMBDA_REST_API }}
