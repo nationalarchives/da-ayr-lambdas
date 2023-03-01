@@ -71,7 +71,7 @@ jobs:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
         aws s3 cp da-ayr-bag-receiver/lambda_bag_receiver.zip s3://$AWS_BUCKET_NAME/
-    - name: Upload da-ayr-bag-receiver to S3 bucket
+    - name: Upload da-ayr-bag-unpacker to S3 bucket
       env:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
