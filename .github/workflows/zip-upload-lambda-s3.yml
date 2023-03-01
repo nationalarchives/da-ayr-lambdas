@@ -16,14 +16,14 @@ jobs:
       run:  |
         ./package_lambda.sh da-ayr-rest-api  aws_lambda.py
         mv da-ayr-rest-api/aws_lambda.zip da-ayr-rest-api/lambda_rest_api.zip
-        cd da-ayr-rest-api
-        ls
     - name: Zip da-ayr-rest-api-auth lambda function
       run: |
         ./package_lambda.sh da-ayr-rest-api-auth lambda_function.py 
         mv da-ayr-rest-api-auth/aws_lambda.zip da-ayr-rest-api-auth/lambda_auth.zip
-        cd da-ayr-rest-api-auth
-        ls
+    - name: Zip da-ayr-bag-indexer lambda function
+      run: |
+        ./package_lambda.sh da-ayr-bag-indexer lambda_function.py
+        mv da-ayr-bag-indexer/lambda_function.zip da-ayr-bag-indexer/lambda_bag_indexer.zip
     - name: Login in to Non Prod Account
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -51,6 +51,11 @@ jobs:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
         aws s3 cp da-ayr-rest-api-auth/lambda_auth.zip s3://$AWS_BUCKET_NAME/
+    - name: Upload da-ayr-bag-indexer to S3 bucket
+      env:
+        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      run: |
+        aws s3 cp da-ayr-bag-indexer/lambda_bag_indexer.zip s3://$AWS_BUCKET_NAME/
     # - name: Refresh LAMBDA functions
     #   env:
     #     AWS_LAMBDA_REST_API: ${{ secrets.AWS_LAMBDA_REST_API }}
