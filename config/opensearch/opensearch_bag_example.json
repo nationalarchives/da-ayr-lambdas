@@ -1,0 +1,309 @@
+{
+  "ayr_role": null,
+  "bag_s3_url": "s3://...redacted.../ayr-in/TDR-2022-D6WD.tar.gz",
+  "bag_data": {
+    "bag-info.txt": {
+      "Consignment-Type": "standard",
+      "Bag-Creator": "TDRExportv0.0.166",
+      "Consignment-Start-Datetime": "2022-11-11T10:18:41Z",
+      "Consignment-Series": "TSTA 1",
+      "Source-Organization": "Testing A",
+      "Contact-Name": "Paul Young",
+      "Internal-Sender-Identifier": "TDR-2022-D6WD",
+      "Consignment-Completed-Datetime": "2022-11-11T10:28:49Z",
+      "Consignment-Export-Datetime": "2022-11-11T10:29:39Z",
+      "Contact-Email": "paul.young@something2.com",
+      "Payload-Oxum": "252.6",
+      "Bagging-Date": "2022-11-11"
+    },
+    "bagit.txt": {
+      "BagIt-Version": "1.0",
+      "Tag-File-Character-Encoding": "UTF-8"
+    },
+    "file-av.csv": [
+      {
+        "Filepath": "data/content/folder-b/file-b1.txt",
+        "AV-Software": "yara",
+        "AV-SoftwareVersion": "4.2.0"
+      },
+      {
+        "Filepath": "data/content/folder-b/file-b2.txt",
+        "AV-Software": "yara",
+        "AV-SoftwareVersion": "4.2.0"
+      },
+      {
+        "Filepath": "data/content/file-c2.txt",
+        "AV-Software": "yara",
+        "AV-SoftwareVersion": "4.2.0"
+      },
+      {
+        "Filepath": "data/content/folder-a/file-a2.txt",
+        "AV-Software": "yara",
+        "AV-SoftwareVersion": "4.2.0"
+      },
+      {
+        "Filepath": "data/content/folder-a/file-a1.txt",
+        "AV-Software": "yara",
+        "AV-SoftwareVersion": "4.2.0"
+      },
+      {
+        "Filepath": "data/content/file-c1.txt",
+        "AV-Software": "yara",
+        "AV-SoftwareVersion": "4.2.0"
+      }
+    ],
+    "file-ffid.csv": [
+      {
+        "Filepath": "data/content/folder-b/file-b1.txt",
+        "Extension": "txt",
+        "PUID": "x-fmt/111",
+        "FFID-Software": "Droid",
+        "FFID-SoftwareVersion": "6.5.2",
+        "FFID-BinarySignatureFileVersion": "DROID_SignatureFile_V96.xml",
+        "FFID-ContainerSignatureFileVersion": "container-signature-20200121.xml"
+      },
+      {
+        "Filepath": "data/content/folder-b/file-b2.txt",
+        "Extension": "txt",
+        "PUID": "x-fmt/111",
+        "FFID-Software": "Droid",
+        "FFID-SoftwareVersion": "6.5.2",
+        "FFID-BinarySignatureFileVersion": "DROID_SignatureFile_V96.xml",
+        "FFID-ContainerSignatureFileVersion": "container-signature-20200121.xml"
+      },
+      {
+        "Filepath": "data/content/file-c2.txt",
+        "Extension": "txt",
+        "PUID": "x-fmt/111",
+        "FFID-Software": "Droid",
+        "FFID-SoftwareVersion": "6.5.2",
+        "FFID-BinarySignatureFileVersion": "DROID_SignatureFile_V96.xml",
+        "FFID-ContainerSignatureFileVersion": "container-signature-20200121.xml"
+      },
+      {
+        "Filepath": "data/content/folder-a/file-a2.txt",
+        "Extension": "txt",
+        "PUID": "x-fmt/111",
+        "FFID-Software": "Droid",
+        "FFID-SoftwareVersion": "6.5.2",
+        "FFID-BinarySignatureFileVersion": "DROID_SignatureFile_V96.xml",
+        "FFID-ContainerSignatureFileVersion": "container-signature-20200121.xml"
+      },
+      {
+        "Filepath": "data/content/folder-a/file-a1.txt",
+        "Extension": "txt",
+        "PUID": "x-fmt/111",
+        "FFID-Software": "Droid",
+        "FFID-SoftwareVersion": "6.5.2",
+        "FFID-BinarySignatureFileVersion": "DROID_SignatureFile_V96.xml",
+        "FFID-ContainerSignatureFileVersion": "container-signature-20200121.xml"
+      },
+      {
+        "Filepath": "data/content/file-c1.txt",
+        "Extension": "txt",
+        "PUID": "x-fmt/111",
+        "FFID-Software": "Droid",
+        "FFID-SoftwareVersion": "6.5.2",
+        "FFID-BinarySignatureFileVersion": "DROID_SignatureFile_V96.xml",
+        "FFID-ContainerSignatureFileVersion": "container-signature-20200121.xml"
+      }
+    ],
+    "file-metadata.csv": [
+      {
+        "Filepath": "data/content",
+        "FileName": "content",
+        "FileType": "Folder",
+        "Filesize": null,
+        "RightsCopyright": "Crown Copyright",
+        "LegalStatus": "Public Record(s)",
+        "HeldBy": "The National Archives, Kew",
+        "Language": "English",
+        "FoiExemptionCode": null,
+        "LastModified": null,
+        "OriginalFilePath": null
+      },
+      {
+        "Filepath": "data/content/folder-a",
+        "FileName": "folder-a",
+        "FileType": "Folder",
+        "Filesize": null,
+        "RightsCopyright": "Crown Copyright",
+        "LegalStatus": "Public Record(s)",
+        "HeldBy": "The National Archives, Kew",
+        "Language": "English",
+        "FoiExemptionCode": null,
+        "LastModified": null,
+        "OriginalFilePath": null
+      },
+      {
+        "Filepath": "data/content/folder-b/file-b1.txt",
+        "FileName": "file-b1.txt",
+        "FileType": "File",
+        "Filesize": "45",
+        "RightsCopyright": "Crown Copyright",
+        "LegalStatus": "Public Record(s)",
+        "HeldBy": "The National Archives, Kew",
+        "Language": "English",
+        "FoiExemptionCode": null,
+        "LastModified": "2022-10-24T09:03:27",
+        "OriginalFilePath": null
+      },
+      {
+        "Filepath": "data/content/folder-b/file-b2.txt",
+        "FileName": "file-b2.txt",
+        "FileType": "File",
+        "Filesize": "45",
+        "RightsCopyright": "Crown Copyright",
+        "LegalStatus": "Public Record(s)",
+        "HeldBy": "The National Archives, Kew",
+        "Language": "English",
+        "FoiExemptionCode": null,
+        "LastModified": "2022-10-24T09:03:27",
+        "OriginalFilePath": null
+      },
+      {
+        "Filepath": "data/content/file-c2.txt",
+        "FileName": "file-c2.txt",
+        "FileType": "File",
+        "Filesize": "36",
+        "RightsCopyright": "Crown Copyright",
+        "LegalStatus": "Public Record(s)",
+        "HeldBy": "The National Archives, Kew",
+        "Language": "English",
+        "FoiExemptionCode": null,
+        "LastModified": "2022-10-24T09:03:27",
+        "OriginalFilePath": null
+      },
+      {
+        "Filepath": "data/content/folder-a/file-a2.txt",
+        "FileName": "file-a2.txt",
+        "FileType": "File",
+        "Filesize": "45",
+        "RightsCopyright": "Crown Copyright",
+        "LegalStatus": "Public Record(s)",
+        "HeldBy": "The National Archives, Kew",
+        "Language": "English",
+        "FoiExemptionCode": null,
+        "LastModified": "2022-10-24T09:03:27",
+        "OriginalFilePath": null
+      },
+      {
+        "Filepath": "data/content/folder-a/file-a1.txt",
+        "FileName": "file-a1.txt",
+        "FileType": "File",
+        "Filesize": "45",
+        "RightsCopyright": "Crown Copyright",
+        "LegalStatus": "Public Record(s)",
+        "HeldBy": "The National Archives, Kew",
+        "Language": "English",
+        "FoiExemptionCode": null,
+        "LastModified": "2022-11-11T10:04:30",
+        "OriginalFilePath": null
+      },
+      {
+        "Filepath": "data/content/file-c1.txt",
+        "FileName": "file-c1.txt",
+        "FileType": "File",
+        "Filesize": "36",
+        "RightsCopyright": "Crown Copyright",
+        "LegalStatus": "Public Record(s)",
+        "HeldBy": "The National Archives, Kew",
+        "Language": "English",
+        "FoiExemptionCode": null,
+        "LastModified": "2022-10-24T09:03:27",
+        "OriginalFilePath": null
+      },
+      {
+        "Filepath": "data/content/folder-b",
+        "FileName": "folder-b",
+        "FileType": "Folder",
+        "Filesize": null,
+        "RightsCopyright": "Crown Copyright",
+        "LegalStatus": "Public Record(s)",
+        "HeldBy": "The National Archives, Kew",
+        "Language": "English",
+        "FoiExemptionCode": null,
+        "LastModified": null,
+        "OriginalFilePath": null
+      }
+    ],
+    "manifest-sha256.txt": [
+      {
+        "object": "data/content/folder-a/file-a1.txt",
+        "checksum": "e36a7c5c31f391a117e6c2cb64ccf6be0da33fb765dc0b04e1c2438287b4fb71"
+      },
+      {
+        "object": "data/content/folder-b/file-b2.txt",
+        "checksum": "b62a45f66bbc5d8f234f785b3f2342a07ef6db5fc9bcaf11273f6712a8629c05"
+      },
+      {
+        "object": "data/content/folder-a/file-a2.txt",
+        "checksum": "5d11e11deb1705433b900a4b07a07cf6307b595f4121081342aa12f67989b8fa"
+      },
+      {
+        "object": "data/content/file-c2.txt",
+        "checksum": "bb8fa1b5e701b90345ca100a8a497e7e386a187376211cd66ba293c4655c1d8d"
+      },
+      {
+        "object": "data/content/folder-b/file-b1.txt",
+        "checksum": "1ac5612f744314f2a32c72e562b4b548ec587888249c23ceae9c19a9b566018c"
+      },
+      {
+        "object": "data/content/file-c1.txt",
+        "checksum": "5bd8879fba139fed98c048261cb2a91d727ceafb27414cc54e21c26915e9e40f"
+      }
+    ],
+    "tagmanifest-sha256.txt": [
+      {
+        "object": "file-av.csv",
+        "checksum": "4ab6e28e6dcd207517902a67b864a0397a88d784d5a80515d9e557a95da6a56a"
+      },
+      {
+        "object": "manifest-sha256.txt",
+        "checksum": "696eb142a2550ef9c66a40dd07f15a2de3021e488fe9a095363406d10f9a7eb6"
+      },
+      {
+        "object": "file-ffid.csv",
+        "checksum": "c7aec069ffae9146b8f44cbc2c3e7ec1a369cb768d9d1c782616f22a3cf385c4"
+      },
+      {
+        "object": "file-metadata.csv",
+        "checksum": "0911e5d57095056f3eebc6b0c73ed25c252f030436672f1a5981bf301216c318"
+      },
+      {
+        "object": "bag-info.txt",
+        "checksum": "f94a14782bbe97a0f03a932342015d98219bd5d96f20f1712d815b69359e084b"
+      },
+      {
+        "object": "bagit.txt",
+        "checksum": "1712ecfb074bf29c4188ad3421032509159a09739fd604f8fe57038b4ddefcc9"
+      }
+    ],
+    "bag_sub_files": [
+      {
+        "object": "ayr-in/TDR-2022-D6WD.tar.gz/TDR-2022-D6WD/data/content/file-c1.txt",
+        "data": "dummy data in sample for file-c1.txt"
+      },
+      {
+        "object": "ayr-in/TDR-2022-D6WD.tar.gz/TDR-2022-D6WD/data/content/file-c2.txt",
+        "data": "dummy data in sample for file-c2.txt"
+      },
+      {
+        "object": "ayr-in/TDR-2022-D6WD.tar.gz/TDR-2022-D6WD/data/content/folder-a/file-a1.txt",
+        "data": "dummy data in sample for folder-a/file-a1.txt"
+      },
+      {
+        "object": "ayr-in/TDR-2022-D6WD.tar.gz/TDR-2022-D6WD/data/content/folder-a/file-a2.txt",
+        "data": "dummy data in sample for folder-a/file-a2.txt"
+      },
+      {
+        "object": "ayr-in/TDR-2022-D6WD.tar.gz/TDR-2022-D6WD/data/content/folder-b/file-b1.txt",
+        "data": "dummy data in sample for folder-b/file-b1.txt"
+      },
+      {
+        "object": "ayr-in/TDR-2022-D6WD.tar.gz/TDR-2022-D6WD/data/content/folder-b/file-b2.txt",
+        "data": "dummy data in sample for folder-b/file-b2.txt"
+      }
+    ]
+  }
+}
