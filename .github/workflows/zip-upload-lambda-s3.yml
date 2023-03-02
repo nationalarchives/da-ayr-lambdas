@@ -58,9 +58,10 @@ jobs:
         timestamp=$(date +"%Y%m%d%H%M")
         aws s3 mv s3://$AWS_BUCKET_NAME/lambda_rest_api.zip s3://$AWS_BUCKET_NAME/old/lambda_rest_api_$timestamp.zip
         aws s3 mv s3://$AWS_BUCKET_NAME/lambda_auth.zip s3://$AWS_BUCKET_NAME/old/lambda_auth_$timestamp.zip.zip
-        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_bag_indexer.zip s3://$AWS_BUCKET_NAME/old/lambda_bag_indexer_$timestamp.zip.zip
-        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_bag_receiver.zip s3://$AWS_BUCKET_NAME/old/lambda_bag_receiver_$timestamp.zip.zip
-        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_bag_unpacker.zip s3://$AWS_BUCKET_NAME/old/lambda_bag_unpacker_$timestamp.zip.zip
+        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_bag_indexer.zip s3://$AWS_BUCKET_NAME/old/lambda_bag_indexer_$timestamp.zip
+        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_bag_receiver.zip s3://$AWS_BUCKET_NAME/old/lambda_bag_receiver_$timestamp.zip
+        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_bag_unpacker.zip s3://$AWS_BUCKET_NAME/old/lambda_bag_unpacker_$timestamp.zip
+        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_bag_unpacker.zip s3://$AWS_BUCKET_NAME/old/lambda_bag_role_assigner$timestamp.zip
     - name: Upload da-ayr-rest api to S3 bucket
       env:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
