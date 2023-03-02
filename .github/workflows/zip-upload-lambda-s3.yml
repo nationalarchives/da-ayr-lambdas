@@ -16,14 +16,30 @@ jobs:
       run:  |
         ./package_lambda.sh da-ayr-rest-api  aws_lambda.py
         mv da-ayr-rest-api/aws_lambda.zip da-ayr-rest-api/lambda_rest_api.zip
-        cd da-ayr-rest-api
-        ls
     - name: Zip da-ayr-rest-api-auth lambda function
       run: |
         ./package_lambda.sh da-ayr-rest-api-auth lambda_function.py 
         mv da-ayr-rest-api-auth/aws_lambda.zip da-ayr-rest-api-auth/lambda_auth.zip
-        cd da-ayr-rest-api-auth
-        ls
+    - name: Zip da-ayr-bag-indexer lambda function
+      run: |
+        ./package_lambda.sh da-ayr-bag-indexer lambda_function.py
+        mv da-ayr-bag-indexer/aws_lambda.zip da-ayr-bag-indexer/lambda_bag_indexer.zip
+    - name: Zip da-ayr-bag-receiver lambda function
+      run: |
+        ./package_lambda.sh da-ayr-bag-receiver lambda_function.py
+        mv da-ayr-bag-receiver/aws_lambda.zip da-ayr-bag-receiver/lambda_bag_receiver.zip
+    - name: Zip da-ayr-bag-receiver lambda function
+      run: |
+        ./package_lambda.sh da-ayr-bag-unpacker lambda_function.py
+        mv da-ayr-bag-unpacker/aws_lambda.zip da-ayr-bag-unpacker/lambda_bag_unpacker.zip
+    - name: Zip da-ayr-bag-to-opensearch lambda function
+      run: |
+        ./package_lambda.sh da-ayr-bag-to-opensearch lambda_function.py
+        mv da-ayr-bag-to-opensearch/aws_lambda.zip da-ayr-bag-to-opensearch/lambda_bag_to_opensearch.zip
+    - name: Zip da-ayr-bag-role-assigner lambda function
+      run: |
+        ./package_lambda.sh da-ayr-bag-role-assigner lambda_function.py
+        mv da-ayr-bag-role-assigner/aws_lambda.zip da-ayr-bag-role-assigner/lambda_bag_role_assigner.zip
     - name: Login in to Non Prod Account
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -39,8 +55,13 @@ jobs:
       env:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
-        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_rest_api.zip s3://$AWS_BUCKET_NAME/old/lambda_rest_api.zip
-        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_auth.zip s3://$AWS_BUCKET_NAME/old/lambda_auth.zip
+        timestamp=$(date +"%Y%m%d%H%M")
+        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_rest_api.zip s3://$AWS_BUCKET_NAME/old/lambda_rest_api_$timestamp.zip
+        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_auth.zip s3://$AWS_BUCKET_NAME/old/lambda_auth_$timestamp.zip.zip
+        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_bag_indexer.zip s3://$AWS_BUCKET_NAME/old/lambda_bag_indexer_$timestamp.zip
+        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_bag_receiver.zip s3://$AWS_BUCKET_NAME/old/lambda_bag_receiver_$timestamp.zip
+        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_bag_unpacker.zip s3://$AWS_BUCKET_NAME/old/lambda_bag_unpacker_$timestamp.zip
+        aws s3 mv s3://$AWS_BUCKET_NAME/lambda_bag_to_opensearch.zip s3://$AWS_BUCKET_NAME/old/lambda_bag_to_opensearch_$timestamp.zip
     - name: Upload da-ayr-rest api to S3 bucket
       env:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
@@ -51,6 +72,31 @@ jobs:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
         aws s3 cp da-ayr-rest-api-auth/lambda_auth.zip s3://$AWS_BUCKET_NAME/
+    - name: Upload da-ayr-bag-indexer to S3 bucket
+      env:
+        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      run: |
+        aws s3 cp da-ayr-bag-indexer/lambda_bag_indexer.zip s3://$AWS_BUCKET_NAME/
+    - name: Upload da-ayr-bag-receiver to S3 bucket
+      env:
+        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      run: |
+        aws s3 cp da-ayr-bag-receiver/lambda_bag_receiver.zip s3://$AWS_BUCKET_NAME/
+    - name: Upload da-ayr-bag-unpacker to S3 bucket
+      env:
+        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      run: |
+        aws s3 cp da-ayr-bag-unpacker/lambda_bag_unpacker.zip s3://$AWS_BUCKET_NAME/
+    - name: Upload da-ayr-bag-to-opensearch to S3 bucket
+      env:
+        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      run: |
+        aws s3 cp da-ayr-bag-to-opensearch/lambda_bag_to_opensearch.zip s3://$AWS_BUCKET_NAME/
+    - name: Upload da-ayr-bag-role-assigner to S3 bucket
+      env:
+        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      run: |
+        aws s3 cp da-ayr-bag-role-assigner/lambda_bag_role_assigner.zip s3://$AWS_BUCKET_NAME/
     # - name: Refresh LAMBDA functions
     #   env:
     #     AWS_LAMBDA_REST_API: ${{ secrets.AWS_LAMBDA_REST_API }}
