@@ -1,5 +1,8 @@
 name: Zip Lambda and upload to S3 bucket
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 permissions:
   id-token: write
