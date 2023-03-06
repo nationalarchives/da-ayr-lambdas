@@ -30,7 +30,7 @@ class BagFileMapper:
     BAG_TAGMANIFEST_SHA256 = 'tagmanifest-sha256.txt'
 
     # Explicitly declare properties set by __init__ method
-    bag_sub_file_list = []
+    bag_sub_file_list = None
     bag_info_txt = None
     bagit_txt = None
     file_av_csv = None
@@ -55,6 +55,7 @@ class BagFileMapper:
         """
         print(f'__init__: file_list={file_list}')
         print(f'__init__: path_prefix={path_prefix}')
+        self.bag_sub_file_list = []
 
         for bag_file_full_path in file_list:
             print(f'__init__: bag_file_full_path={bag_file_full_path}')
@@ -84,12 +85,10 @@ class BagFileMapper:
         if self.bag_info_txt is None:
             raise BagError(f'No input file for "{self.BAG_BAG_INFO}"')
 
+        print(f'BagFileMapper: self.bag_sub_file_list={self.bag_sub_file_list}')
+
 
 class S3BagReader(BagFileMapper):
-    s3_api = None
-    s3_bucket = None
-    only_expected_root_files = False
-
     def __init__(
             self,
             s3_bucket: str,
@@ -112,9 +111,13 @@ class S3BagReader(BagFileMapper):
         self.s3_bucket = s3_bucket
         self.only_expected_root_files = only_expected_root_files
         if s3_api:
+            print(f'Using externally provided s3_api instance')
             self.s3_api = s3_api
         else:
+            print(f'Creating internal s3_api instance')
             self.s3_api = boto3.client('s3')
+
+        print(f'S3BagReader: self.bag_sub_file_list={self.bag_sub_file_list}')
 
     @staticmethod
     def get_property_file_as_dict(s3_object) -> dict:
@@ -169,49 +172,61 @@ class S3BagReader(BagFileMapper):
 
     def get_bag_info_txt_as_dict(self) -> dict:
         s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.bag_info_txt)
-        data = S3BagReader.get_property_file_as_dict(s3_object)
+        data = self.get_property_file_as_dict(s3_object)
         return {
             self.BAG_BAG_INFO: data
         }
 
     def get_bagit_txt_as_dict(self) -> dict:
         s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.bagit_txt)
-        data = S3BagReader.get_property_file_as_dict(s3_object)
+        data = self.get_property_file_as_dict(s3_object)
         return {
             self.BAG_BAGIT: data
         }
 
     def get_file_av_csv_as_dict(self) -> dict:
-        s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.file_av_csv)
-        data = S3BagReader.get_csv_file_as_list(s3_object)
-        return {
-            self.BAG_FILE_AV: data
-        }
+        if self.file_av_csv:
+            s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.file_av_csv)
+            data = self.get_csv_file_as_list(s3_object)
+            return {
+                self.BAG_FILE_AV: data
+            }
+        else:
+            print(f'get_file_av_csv_as_dict: file not found')
+            return {}
 
     def get_file_ffid_csv_as_dict(self) -> dict:
-        s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.file_ffid_csv)
-        data = S3BagReader.get_csv_file_as_list(s3_object)
-        return {
-            self.BAG_FILE_FFID_CSV: data
-        }
+        if self.file_ffid_csv:
+            s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.file_ffid_csv)
+            data = self.get_csv_file_as_list(s3_object)
+            return {
+                self.BAG_FILE_FFID_CSV: data
+            }
+        else:
+            print(f'get_file_ffid_csv_as_dict: file not found')
+            return {}
 
     def get_file_metadata_csv_as_dict(self) -> dict:
-        s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.file_metadata_csv)
-        data = S3BagReader.get_csv_file_as_list(s3_object)
-        return {
-            self.BAG_FILE_METADATA: data
-        }
+        if self.file_metadata_csv:
+            s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.file_metadata_csv)
+            data = self.get_csv_file_as_list(s3_object)
+            return {
+                self.BAG_FILE_METADATA: data
+            }
+        else:
+            print(f'get_file_metadata_csv_as_dict: file not found')
+            return {}
 
     def get_manifest_sha256_as_dict(self) -> dict:
         s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.manifest_sha_256_txt)
-        data = S3BagReader.get_checksum_file_as_list(s3_object)
+        data = self.get_checksum_file_as_list(s3_object)
         return {
             self.BAG_MANIFEST_SHA256: data
         }
 
     def get_tagmanifest_sha256_as_dict(self) -> dict:
         s3_object = self.s3_api.get_object(Bucket=self.s3_bucket, Key=self.tagmanifest_sha_256_txt)
-        data = S3BagReader.get_checksum_file_as_list(s3_object)
+        data = self.get_checksum_file_as_list(s3_object)
         return {
             self.BAG_TAGMANIFEST_SHA256: data
         }
@@ -230,6 +245,7 @@ class S3BagReader(BagFileMapper):
         """
         text_files = ['.txt', '.csv']
         file_list = []
+        print(f'self.bag_sub_file_list:\n{self.bag_sub_file_list}')
         for sub_file in self.bag_sub_file_list:
             if str(sub_file)[-4:] in text_files:
                 print(f'Loading text file: {sub_file}')
