@@ -174,7 +174,7 @@ def get_opensearch_query(
     query['query']['bool']['must'].append(
         {
             "match_phrase": {
-                "bag_info.source_organization": source_organization
+                "bag_data.bag-info.txt.Source-Organization": source_organization
             }
         }
     )
