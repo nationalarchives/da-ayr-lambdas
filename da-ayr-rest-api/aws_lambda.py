@@ -12,7 +12,7 @@ ENV_OPENSEARCH_USER_PASSWORD_PARAM_STORE_KEY = 'OPENSEARCH_USER_PASSWORD_PARAM_S
 ENV_OPENSEARCH_DEFAULT_INDEX = 'OPENSEARCH_DEFAULT_INDEX'
 JSON_KEY_BODY = 'body'
 JSON_KEY_OPENSEARCH_INDEX = 'opensearch_index'
-JSON_KEY_SOURCE_ORG = 'source_organization'
+JSON_KEY_AYR_SEARCH = 'ayr_search'
 EVENT_KEY_REQUEST_CONTEXT = 'requestContext'
 EVENT_KEY_AUTHORIZER = 'authorizer'
 EVENT_KEY_KEYCLOAK_RESPONSE = 'keycloak_response'
@@ -98,6 +98,7 @@ def get_opensearch_index(event) -> str:
         elif JSON_KEY_BODY in event:
             # Lambda with payload in body key
             print(f'get_opensearch_index: found key {JSON_KEY_BODY}')
+            print(f'get_opensearch_index: body:\n{event["body"]}')
             body = json.loads(event['body'])
             if JSON_KEY_OPENSEARCH_INDEX in body:
                 print(f'get_opensearch_index: found key {JSON_KEY_OPENSEARCH_INDEX}')
@@ -106,7 +107,7 @@ def get_opensearch_index(event) -> str:
         return ''
 
 
-def get_event_key(event, key: str) -> str:
+def get_event_key(event, key: str):
     """
     Returns `key` value from event; either at top-level, or in `body` key;
     returns empty string if not found.
@@ -152,13 +153,13 @@ def get_keycloak_context_realm_roles(event) -> list:
 
 def get_opensearch_query(
         role_list: list,
-        source_organization: str
+        ayr_search: dict
 ) -> str:
     """
     Builds an example OpenSearch query.
 
     :param role_list: List of user's permitted roles
-    :param source_organization: Search for source organization value
+    :param ayr_search: An AYR search request structure
     :return: JSON formatted OpenSearch example query.
     """
     query = {
@@ -171,14 +172,15 @@ def get_opensearch_query(
         }
     }
 
-    query['query']['bool']['must'].append(
-        {
-            "match_phrase": {
-                "bag_data.bag-info.txt.Source-Organization": source_organization
+    # Apply AYR end-user search
+    for must_match_phrase in ayr_search['must_match_phrase_list']:
+        query['query']['bool']['must'].append(
+            {
+                "match_phrase": must_match_phrase
             }
-        }
-    )
+        )
 
+    # Apply AYR system role restriction filter
     for role in role_list:
         query['query']['bool']['should'].append(
             {
@@ -213,13 +215,13 @@ def lambda_handler(event, context):
         opensearch_index += '/'
     url = opensearch_host_url + f'{opensearch_index}_search?pretty=true'
     print(f'url={url}')
-    source_organization = get_event_key(event=event, key=JSON_KEY_SOURCE_ORG)
-    print(f'source_organization={source_organization}')
+    ayr_search = get_event_key(event=event, key=JSON_KEY_AYR_SEARCH)
+    print(f'ayr_search={ayr_search}')
     roles = get_keycloak_context_realm_roles(event)
     print(f'roles:\n{roles}')
     opensearch_query_json = get_opensearch_query(
         role_list=roles,
-        source_organization=source_organization
+        ayr_search=ayr_search
     )
     print(f'opensearch_query_json={opensearch_query_json}')
 
