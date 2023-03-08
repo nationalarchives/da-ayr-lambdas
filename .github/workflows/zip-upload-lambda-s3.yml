@@ -26,7 +26,7 @@ jobs:
         mv da-ayr-rest-api-auth/aws_lambda.zip da-ayr-rest-api-auth/lambda_auth.zip
     - name: Zip da-ayr-bag-indexer lambda function
       run: |
-        ./package_lambda.sh da-ayr-bag-indexer lambda_function.py
+        ./package_lambda.sh da-ayr-bag-indexer lambda_function.py s3_bag_reader.py
         mv da-ayr-bag-indexer/aws_lambda.zip da-ayr-bag-indexer/lambda_bag_indexer.zip
     - name: Zip da-ayr-bag-receiver lambda function
       run: |
