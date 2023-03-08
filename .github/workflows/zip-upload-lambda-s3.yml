@@ -30,11 +30,11 @@ jobs:
         mv da-ayr-bag-indexer/aws_lambda.zip da-ayr-bag-indexer/lambda_bag_indexer.zip
     - name: Zip da-ayr-bag-receiver lambda function
       run: |
-        ./package_lambda.sh da-ayr-bag-receiver lambda_function.py
+        ./package_lambda.sh da-ayr-bag-receiver lambda_function.py object_lib.py
         mv da-ayr-bag-receiver/aws_lambda.zip da-ayr-bag-receiver/lambda_bag_receiver.zip
     - name: Zip da-ayr-bag-receiver lambda function
       run: |
-        ./package_lambda.sh da-ayr-bag-unpacker lambda_function.py
+        ./package_lambda.sh da-ayr-bag-unpacker lambda_function.py tar_lib.py
         mv da-ayr-bag-unpacker/aws_lambda.zip da-ayr-bag-unpacker/lambda_bag_unpacker.zip
     - name: Zip da-ayr-bag-to-opensearch lambda function
       run: |
