@@ -47,7 +47,8 @@ jobs:
     - name: Login in to Non Prod Account
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: ${{ secrets.AWS_S3_ROLE }}
+        #role-to-assume: ${{ secrets.AWS_S3_ROLE }}
+        role-to-assume: ${{ secrets.AWS_LAMBDA_ROLE}}
         aws-region: ${{ secrets.AWS_REGION }}
         role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
         aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
