@@ -101,6 +101,9 @@ jobs:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
         aws s3 cp da-ayr-bag-role-assigner/lambda_bag_role_assigner.zip s3://$AWS_BUCKET_NAME/
+    - name: List Lambda functions
+      run: |
+        aws lambda list-functions
     # - name: Refresh LAMBDA functions
     #   env:
     #     AWS_LAMBDA_REST_API: ${{ secrets.AWS_LAMBDA_REST_API }}
