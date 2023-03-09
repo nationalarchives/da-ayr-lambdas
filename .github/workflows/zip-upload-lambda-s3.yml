@@ -101,11 +101,3 @@ jobs:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
         aws s3 cp da-ayr-bag-role-assigner/lambda_bag_role_assigner.zip s3://$AWS_BUCKET_NAME/
-    - name: Refresh LAMBDA functions
-      env:
-        AWS_LAMBDA_REST_API: ${{ secrets.AWS_LAMBDA_REST_API }}
-        AWS_LAMBDA_AUTH: ${{ secrets.AWS_LAMBDA_AUTH }}
-        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-      run: |
-        aws lambda update-function-code --function-name $AWS_LAMBDA_REST_API --s3-bucket $AWS_BUCKET_NAME --s3-key $AWS_BUCKET_NAME/lambda_rest_api.zip
-        aws lambda update-function-code --function-name $AWS_LAMBDA_AUTH --s3-bucket $AWS_BUCKET_NAME --s3-key $AWS_BUCKET_NAME/lambda_auth.zip
