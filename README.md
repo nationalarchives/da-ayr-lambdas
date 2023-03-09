@@ -21,3 +21,5 @@ The "env" section provides environment variables to the steps. In this workflow,
 The workflow uses the "aws-cli" to upload and move the files. The "aws s3 cp" command is used to upload files to the S3 bucket, and the "aws s3 mv" command is used to move files from the root directory to the "/old" folder.
 
 Overall, this workflow automates the tedious process of zipping Lambda functions and uploading them to S3, saving time and reducing the likelihood of errors.
+
+If you would like to update the lambda functions in AWS with the updated files in s3, please go run the terraform infrascture github workflow from this repo https://github.com/nationalarchives/da-ayr-terraform-infra.
