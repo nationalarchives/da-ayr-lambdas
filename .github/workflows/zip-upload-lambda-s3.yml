@@ -103,7 +103,8 @@ jobs:
         aws s3 cp da-ayr-bag-role-assigner/lambda_bag_role_assigner.zip s3://$AWS_BUCKET_NAME/
     - name: List Lambda functions
       run: |
-        aws lambda list-functions --profile nonprod --region ${{ secrets.AWS_REGION }}
+        aws configure list-profiles
+    # aws lambda list-functions --profile nonprod --region ${{ secrets.AWS_REGION }}
     # - name: Refresh LAMBDA functions
     #   env:
     #     AWS_LAMBDA_REST_API: ${{ secrets.AWS_LAMBDA_REST_API }}
