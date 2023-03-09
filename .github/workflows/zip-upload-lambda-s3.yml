@@ -101,9 +101,16 @@ jobs:
         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       run: |
         aws s3 cp da-ayr-bag-role-assigner/lambda_bag_role_assigner.zip s3://$AWS_BUCKET_NAME/
+    - name: Add profile credentials to ~/.aws/credentials 
+      run: |
+        aws configure set aws_access_key_id ${{ env.AWS_ACCESS_KEY_ID }} --profile nonprod
+        aws configure set aws_secret_access_key ${{ env.AWS_SECRET_ACCESS_KEY}} --profile nonprod
+    - name: Output Github Role
+      run: |
+        aws sts get-caller-identity
     - name: List Lambda functions
       run: |
-        aws configure list-profiles
+        aws lambda list-functions --profile nonprod
     # aws lambda list-functions --profile nonprod --region ${{ secrets.AWS_REGION }}
     # - name: Refresh LAMBDA functions
     #   env:
